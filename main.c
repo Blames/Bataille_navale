@@ -58,18 +58,14 @@ void placer(int plateau[2][MAP_H][MAP_W],int bateau[3],int joueur){
                     trigger+=plateau[joueur][x+j][y];
 
                 //VERIFICATION PLACE VERTICALE:
-                    printf("\n   vertical\n");
                     taille_verif=(x+taille);
-                    printf("taille_verif=%d || x=%d || taille=%d", taille_verif, x, taille);
                     limite=18;
                 }
                 if (hor_vert==1){
                     trigger+=plateau[joueur][x][y+j];
 
                     //VERIFICATION PLACE HORIZONTALE :
-                    printf("\n   horizontal\n");
                     taille_verif=(y+taille);
-                    printf("taille_verif=%d || y=%d || taille=%d", taille_verif, y, taille);
                     limite=24;
                 }
             }
@@ -204,7 +200,6 @@ void phase_de_tir_manuelle(int tir_ver, int tir_hor,int player, int ID_joueur, i
             plateau[ID_joueur][tir_ver][tir_hor]=8;
             printf("PLOUF... C'EST DANS l'EAU");
         }
-
         printf("\n+++FIN DU TOUR+++");
         printf("\n+++APPUYEZ SUR UNE TOUCHE POUR CONTINUER+++\n\n");
         fflush(stdin);
@@ -212,6 +207,44 @@ void phase_de_tir_manuelle(int tir_ver, int tir_hor,int player, int ID_joueur, i
 //AFFICHAGE DU PLATEAU DU JOUEUR SUIVANT
         affichage_plateau(plateau,ID_joueur);
 }
+
+void load(int plateau [2][MAP_H][MAP_W]){
+    char c;
+    int k;
+    int i;
+    int j;
+
+    FILE *save=fopen("./save.txt","r");
+
+        for(k=0;k<2;k++){
+            for(i=0; i<18; i++){
+                for(j=0;j<24;j++){
+                    c=fgetc(save);
+                    plateau[k][i][j]=c-'0';
+                }
+            }
+        }
+        fclose(save);
+}
+
+void sauvegarde(int plateau [2][MAP_H][MAP_W]){
+
+    FILE *save=fopen("./save.txt","w+");
+    int i=0;
+    int j=0;
+    int k=0;
+
+    for(k=0;k<2;k++){
+        for(i=0; i<18; i++){
+            for(j=0;j<24;j++){
+                fputc(plateau [k][i][j]+'0', save);
+            }
+        }
+    }
+
+    fclose(save);
+}
+
 
 int main(){
 
@@ -223,6 +256,7 @@ int main(){
     int tir_y=0;
     int nb_pts=0;
     int menu=0;
+    int choix=0;
     int points[2][1]={0};
 //DECLARATION DES BATOOOOOOOWS
 //ID , TAILLE , NOMBRE
@@ -232,6 +266,7 @@ int main(){
     int porte_avion[3]={5,6,1};
 
     int plateau [IA_VS_IA][MAP_H][MAP_W]={0};
+
 
 //PLACEMENT DES BATEAUX
             //JOUEUR1
@@ -247,8 +282,18 @@ int main(){
     placer(plateau,croiseur,ID_joueur);
     placer(plateau,porte_avion,ID_joueur);
 
+// PHASE DE CHARGEMENT
+    printf("\nVoulez vous charger une partie ? \nOUI=[1] || NON =[0]\n");
+    scanf("%d", &choix);
+    if (choix==1){
+        load(plateau);
+    }else if (choix==0){
+        printf("coucou");
+    }
+
 //MENU
-    printf("Bataille navale :\n 1= J1vsJ2 || 2= J1vsIA || 3= IAvsIA\n");
+
+    printf("\nBataille navale :\n 1= J1vsJ2 || 2= J1vsIA || 3= IAvsIA\n");
     scanf("%d", &menu);
     switch(menu){
 
@@ -257,6 +302,7 @@ case 1:
             //PHASE DE TIR
         ID_joueur=0;
         player=1;
+        sauvegarde(plateau);
         phase_de_tir_manuelle(tir_x,tir_y,player,ID_joueur, plateau, points);
         if (points[player][0]==21){
             printf("\n\nJEU TERMINE ! Victoire du joueur %d", player+1);
@@ -272,7 +318,6 @@ case 1:
         printf("\n   Tour n.%d \n",i+1);
         i++;
         }
-
 
 case 2:
     while (points[player][0]<21){
@@ -314,9 +359,6 @@ case 3:
         printf("\n   Tour n.%d \n",i+1);
         i++;
         }
-
-
-
 // RECAPITULATIF DE LA PARTIE
     printf("\n      |||  Scores   |||     \n");
     player=0;
