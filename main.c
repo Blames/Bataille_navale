@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define IA_VS_IA 2
 #define MAP_H 18
 #define MAP_W 24
 
@@ -10,11 +9,11 @@ void affichage_plateau(int plateau[2][MAP_H][MAP_W], int joueur){
     int j=0;
     int k=0;
     printf("\n\nPlateau du joueur %d :", joueur+1);
-    printf("\n  inserez ici chiffres syles");
+    printf("\n |1 |2 |3 |4 |5 |6 |7 |8 |9 |10|11|12|13|14|15|16|17|18|19|20|21|22|23|24");
     for(j=0;j<18;j++){
         printf("\n%c ", alph[j]);
         for(k=0;k<24;k++){
-            printf("%d ", plateau[joueur][j][k]);
+            printf("%d  ", plateau[joueur][j][k]);
         }
     }
 }
@@ -136,10 +135,9 @@ void phase_de_tir_manuelle(int tir_ver, int tir_hor,int player, int ID_joueur, i
         //PHASE DE TIR
 
         fflush(stdin);
-        printf("\nEntrez coordonnées lettres :\n");
+        printf("\nEntrez coordonnees lettres (en chiffre) :\n");
         scanf("%d", &tir_ver);
         tir_ver--;
-        printf("%d",tir_ver);
         while ((tir_ver<0)||(tir_ver>17)){
             printf("Tir impossible, veuillez recommencer.");
             scanf("%d", &tir_ver);
@@ -148,15 +146,13 @@ void phase_de_tir_manuelle(int tir_ver, int tir_hor,int player, int ID_joueur, i
         }
 
         fflush(stdin);
-        printf("\nEntrez coordonnées chiffres :\n");
+        printf("\nEntrez coordonnees chiffres :\n");
         scanf("%d",&tir_hor);
         tir_hor--;
-        printf("%d",tir_hor);
         while ((tir_hor<0)||(tir_hor>23)){
             printf("Tir impossible, veuillez recommencer.");
             scanf("%d",&tir_hor);
             tir_hor--;
-            printf("%d",tir_hor);
         }
 
 //VERIFICATION DE LA COORDONNEE VISEE
@@ -167,24 +163,20 @@ void phase_de_tir_manuelle(int tir_ver, int tir_hor,int player, int ID_joueur, i
             printf("\nEntrez coordonnées lettres :\n");
             scanf("%d", &tir_ver);
             tir_ver--;
-            printf("%d",tir_ver);
             while ((tir_ver<0)||(tir_ver>17)){
                 printf("Tir impossible, veuillez recommencer.");
                 scanf("%d", &tir_ver);
                 tir_ver--;
-                printf("%d",tir_ver);
             }
 
             fflush(stdin);
             printf("\nEntrez coordonnées chiffres :\n");
             scanf("%d",&tir_hor);
             tir_hor--;
-            printf("%d",tir_hor);
             while ((tir_hor<0)||(tir_hor>23)){
                 printf("Tir impossible, veuillez recommencer.");
                 scanf("%d",&tir_hor);
                 tir_hor--;
-                printf("%d",tir_hor);
             }
         }
 
@@ -265,7 +257,7 @@ int main(){
     int croiseur[3]={3,4,2};
     int porte_avion[3]={5,6,1};
 
-    int plateau [IA_VS_IA][MAP_H][MAP_W]={0};
+    int plateau [2][MAP_H][MAP_W]={0};
 
 
 //PLACEMENT DES BATEAUX
@@ -283,17 +275,17 @@ int main(){
     placer(plateau,porte_avion,ID_joueur);
 
 // PHASE DE CHARGEMENT
-    printf("\nVoulez vous charger une partie ? \nOUI=[1] || NON =[0]\n");
+    printf("        BIENVENUE DANS BATTLESHIP : ASSASSIN'S WARFARE INFINITE !\n\nAvant toute chose, voulez vous charger une partie ? \nOUI=[1] || NON =[3]\n");
     scanf("%d", &choix);
     if (choix==1){
         load(plateau);
-    }else if (choix==0){
-        printf("coucou");
+    }else if (choix==3){
+        printf("\nNouvelle partie :\n");
     }
 
 //MENU
 
-    printf("\nBataille navale :\n 1= J1vsJ2 || 2= J1vsIA || 3= IAvsIA\n");
+    printf("\n\n       |||  MENU PRINCIPAL  |||\n\n [1] = J1vsJ2 || [2] = J1vsIA || [3] = IAvsIA\n");
     scanf("%d", &menu);
     switch(menu){
 
@@ -365,6 +357,8 @@ case 3:
     printf("\n Joueur %d || Points=%d",player+1 , points[player][0]);
     player=1;
     printf("\n Joueur %d || Points=%d",player+1 , points[player][0]);
+    printf("\n +++FIN DU JEU+++");
+
 
     }
 }
